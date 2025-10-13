@@ -42,21 +42,36 @@ async function escreverNaPlanilha(dadosDoWebhook) {
 
     const request = {
       spreadsheetId: SPREADSHEET_ID,
-      range: 'Página1!A:H',
+      range: 'aba1!A:H',
       valueInputOption: 'RAW',
       resource: {
         values: [novaLinha],
       },
     };
+    // --- CÂMARA DE SEGURANÇA (A MAIS IMPORTANTE) ---
+    console.log('[DIAGNÓSTICO] A enviar o seguinte pedido para o Google:', request);
+    
+    // Capturamos a resposta para a inspecionar
+    const respostaDoAppend = await sheets.spreadsheets.values.append(request);
+    
+    console.log('[DIAGNÓSTICO] Resposta recebida da API do Google Sheets:');
+    console.log(respostaDoAppend.data);
 
-    await sheets.spreadsheets.values.append(request);
     console.log('-> Nova linha adicionada à planilha com sucesso!');
 
   } catch (error) {
-    console.error('ERRO ao escrever na planilha:', error.message);
+    console.error('!!! ERRO DETALHADO DENTRO DE "escreverNaPlanilha":', error);
     throw error;
   }
 }
+    // await sheets.spreadsheets.values.append(request);
+    // console.log('-> Nova linha adicionada à planilha com sucesso!');
+
+  // } catch (error) {
+  //  console.error('ERRO ao escrever na planilha:', error.message);
+   // throw error;
+ // }}
+
 
 app.post('/webhook', async (req, res) => {
     try {
@@ -138,7 +153,7 @@ app.get('/gerar-relatorio', async (req, res) => {
     
     await sheets.spreadsheets.values.clear({
       spreadsheetId: SPREADSHEET_ID,
-      range: 'Página1!A2:H'
+      range: 'aba1!A2:H'
     })
     res.send('Relatório gerado e planilha limpa com sucesso.');
 
