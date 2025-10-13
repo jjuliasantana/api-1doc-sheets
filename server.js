@@ -119,6 +119,9 @@ app.get('/gerar-relatorio', async (req, res) => {
   try {
     console.log('Iniciando a geração do arquivo...');
     
+    await auth.authorize();
+    const sheets = google.sheets({ version: 'v4', auth: auth });
+
     const respostaDoSheets = await sheets.spreadsheets.values.get({
       spreadsheetId: SPREADSHEET_ID,
       range: 'main!A:H'
