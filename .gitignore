@@ -1,0 +1,5 @@
+node_modules
+credentials.json
+.env
+webhook_logs.txt
+.DS_Store
