@@ -148,8 +148,11 @@ app.get('/gerar-relatorio', async (req, res) => {
     const dataAtual = new Date().toISOString().slice(0, 10);
     const nomeDoArquivo = `relatorio_${dataAtual}.txt`;
 
-    await fsPromises.writeFile(nomeDoArquivo, conteudoDoRelatorio);
-    console.log('Relatório gerado com sucesso:', nomeDoArquivo);
+    res.setHeader('Content-Disposition', `attachment; filename=${nomeDoArquivo}`);
+    res.setHeader('Content-Type', 'text/plain');
+
+    res.send(conteudoDoRelatorio);
+    console.log(`Relatório "${nomeDoArquivo}" enviado para download.`);
     
     await sheets.spreadsheets.values.clear({
       spreadsheetId: SPREADSHEET_ID,
