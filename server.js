@@ -10,7 +10,7 @@ const PORT = process.env.PORT || 3000;
 app.use(express.urlencoded({ extended: true }));
 
 const CREDENTIALS_PATH = path.join(process.cwd(), 'credentials.json');
-const SPREADSHEET_ID = '1BK9bb5_rHuTXfemDRm0pFFcucNDDT06ED7uIvT7Yezg4';
+const SPREADSHEET_ID = '1BK9bb5_rHuTXfemDRm0pFFcucNDDT06ED7uIvT7Yezg';
 
 const auth = new google.auth.JWT({
   keyFile: CREDENTIALS_PATH,
@@ -42,7 +42,7 @@ async function escreverNaPlanilha(dadosDoWebhook) {
 
     const request = {
       spreadsheetId: SPREADSHEET_ID,
-      range: 'aba1!A:H',
+      range: 'main!A:H',
       valueInputOption: 'RAW',
       resource: {
         values: [novaLinha],
@@ -121,7 +121,7 @@ app.get('/gerar-relatorio', async (req, res) => {
     
     const respostaDoSheets = await sheets.spreadsheets.values.get({
       spreadsheetId: SPREADSHEET_ID,
-      range: 'Página1!A:H'
+      range: 'main!A:H'
     })
     const linhasDaPlanilha = respostaDoSheets.data.values;
 
@@ -153,7 +153,7 @@ app.get('/gerar-relatorio', async (req, res) => {
     
     await sheets.spreadsheets.values.clear({
       spreadsheetId: SPREADSHEET_ID,
-      range: 'aba1!A2:H'
+      range: 'main!A2:H'
     })
     res.send('Relatório gerado e planilha limpa com sucesso.');
 
