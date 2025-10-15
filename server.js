@@ -91,7 +91,7 @@ app.post('/webhook', async (req, res) => {
       const ultimaMovimentacao = dadosFinais.movimentacoes[dadosFinais.movimentacoes.length - 1];
       console.log('O setor de destino é o correto. Prosseguindo com a escrita na planilha...');
     
-    if (ultimaMovimentacao.destino_id_setor == idSetorAlvo) {
+    if (ultimaMovimentacao.destino_id_setor == idSetor) {
         deveEscrever = true;
       }
     }
