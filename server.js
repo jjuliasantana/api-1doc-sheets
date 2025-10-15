@@ -62,10 +62,9 @@ async function escreverNaPlanilha(dadosDoWebhook) {
     console.error('!!! ERRO DETALHADO DENTRO DE "escreverNaPlanilha":', error);
     throw error;
   }
-}
      await sheets.spreadsheets.values.append(request);
      console.log('-> Nova linha adicionada à planilha com sucesso!');
-
+}
 
 
 app.post('/webhook', async (req, res) => {
