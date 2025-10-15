@@ -48,10 +48,9 @@ async function escreverNaPlanilha(dadosDoWebhook) {
         values: [novaLinha],
       },
     };
-    // --- CÂMARA DE SEGURANÇA (A MAIS IMPORTANTE) ---
+
     console.log('[DIAGNÓSTICO] A enviar o seguinte pedido para o Google:', request);
     
-    // Capturamos a resposta para a inspecionar
     const respostaDoAppend = await sheets.spreadsheets.values.append(request);
     
     console.log('[DIAGNÓSTICO] Resposta recebida da API do Google Sheets:');
@@ -64,13 +63,9 @@ async function escreverNaPlanilha(dadosDoWebhook) {
     throw error;
   }
 }
-    // await sheets.spreadsheets.values.append(request);
-    // console.log('-> Nova linha adicionada à planilha com sucesso!');
+     await sheets.spreadsheets.values.append(request);
+     console.log('-> Nova linha adicionada à planilha com sucesso!');
 
-  // } catch (error) {
-  //  console.error('ERRO ao escrever na planilha:', error.message);
-   // throw error;
- // }}
 
 
 app.post('/webhook', async (req, res) => {
@@ -91,10 +86,19 @@ app.post('/webhook', async (req, res) => {
     const dadosFinais = JSON.parse(dadosJsonString);
 
     const idSetor = 635;
+    let deveEscrever = false;
     
-    if (dadosFinais.emissao.destino_id_setor == idSetor) {
+    if (dadosFinais.movimentacoes && dadosFinais.movimentacoes.length > 0) {
+      const ultimaMovimentacao = dadosFinais.movimentacoes[dadosFinais.movimentacoes.length - 1];
       console.log('O setor de destino é o correto. Prosseguindo com a escrita na planilha...');
+    
+    if (ultimaMovimentacao.destino_id_setor == idSetorAlvo) {
+        deveEscrever = true;
+      }
+    }
+    if (deveEscrever) {
       await escreverNaPlanilha(dadosFinais);
+    
     } else {
       console.log(`O setor de destino (${dadosFinais.emissao.destino_id_setor}) não corresponde ao setor esperado (${idSetor}) e não será incluído.`);
     }
