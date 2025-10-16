@@ -87,8 +87,9 @@ app.post('/webhook', async (req, res) => {
     const dadosFinais = JSON.parse(dadosJsonString);
 
     const idSetor = 635;
+    const movimentacaoAlvo = dadosFinais.movimentacoes.find(mov => mov.destino_id_setor === idSetor);
     
-    if (dadosFinais.emissao.destino_id_setor != idSetor && dadosFinais.emissao.origem_id_setor == idSetor) {
+    if (dadosFinais.emissao.destino_id_setor === idSetor || movimentacaoAlvo) {
       console.log('O setor de destino é o correto. Prosseguindo com a escrita na planilha...');
       await escreverNaPlanilha(dadosFinais);
     } else {
