@@ -153,17 +153,19 @@ app.get('/gerar-relatorio', async (req, res) => {
     const dataAtual = new Date().toISOString().slice(0, 10);
     const nomeDoArquivo = `relatorio_${dataAtual}.txt`;
 
+    await sheets.spreadsheets.values.clear({
+      spreadsheetId: SPREADSHEET_ID,
+      range: 'main!A2:H'
+    })
+    
+    res.send('Relatório gerado e planilha limpa com sucesso.');
+
     res.setHeader('Content-Disposition', `attachment; filename=${nomeDoArquivo}`);
     res.setHeader('Content-Type', 'text/plain');
 
     res.send(conteudoDoRelatorio);
     console.log(`Relatório "${nomeDoArquivo}" enviado para download.`);
     
-    await sheets.spreadsheets.values.clear({
-      spreadsheetId: SPREADSHEET_ID,
-      range: 'main!A2:H'
-    })
-    res.send('Relatório gerado e planilha limpa com sucesso.');
 
     } else {
       console.log('Nenhuma linha de dados encontrada na planilha.');
