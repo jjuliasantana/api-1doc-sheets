@@ -87,11 +87,16 @@ app.post('/webhook', async (req, res) => {
     const dadosFinais = JSON.parse(dadosJsonString);
 
     const idSetor = 635;
-    const movimentacaoAlvo = dadosFinais.movimentacoes.find(mov => mov.destino_id_setor === idSetor);
+    let deveEscrever = false;
     
-    if (dadosFinais.emissao.destino_id_setor === idSetor || movimentacaoAlvo) {
-      console.log('O setor de destino é o correto. Prosseguindo com a escrita na planilha...');
+    if (dadosFinais.movimentacoes && dadosFinais.movimentacoes.length > 0) {
+      const ultimaMovimentacao = dadosFinais.movimentacoes[dadosFinais.movimentacoes.length - 1];
+        if (ultimaMovimentacao.destino_id_setor == idSetor) {
+        deveEscrever = true;
+      } if (deveEscrever) {
+      console.log('O setor de destino é o correto. Prosseguindo com a escrita na planilha...');;
       await escreverNaPlanilha(dadosFinais);
+    }
     } else {
       console.log(`O setor de destino (${dadosFinais.emissao.destino_id_setor}) não corresponde ao setor esperado (${idSetor}) e não será incluído.`);
     }
@@ -99,7 +104,7 @@ app.post('/webhook', async (req, res) => {
     console.log('DADOS DECODIFICADOS:');
     console.log(dadosFinais);
 
-    const logEntry = `------------------------------\nData: ${new Date().toISOString()}\nDados Decodificados: ${JSON.stringify(dadosFinais, null, 2)}\n\n`;
+    // const logEntry = `------------------------------\nData: ${new Date().toISOString()}\nDados Decodificados: ${JSON.stringify(dadosFinais, null, 2)}\n\n`;
     // fs.appendFile('webhook_logs.txt', logEntry, () => {});
     
     
